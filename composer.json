@@ -1,0 +1,7 @@
+{
+    "require": {
+        "phpoffice/phpspreadsheet": "^4.1",
+        "hisamu/php-xbase": "^2.2",
+        "vlucas/phpdotenv": "^5.6"
+    }
+}

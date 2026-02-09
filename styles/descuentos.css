@@ -1,0 +1,12 @@
+.banner-titulo {
+    background-color: #007bff;
+    color: white;
+    padding: 0.5rem;
+    font-size: 1.5rem;
+    text-align: center;
+    font-weight: bold;
+}
+
+#tablaInforme th, #tablaInforme td {
+  white-space: nowrap;
+}
