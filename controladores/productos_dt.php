@@ -57,22 +57,19 @@ try {
         respond_ok([]); // tabla vacía
     }
 
-    // 3) Obtener productos por código (lo que pediste)
+    // 3) Obtener productos por código
     // NOTA: $conParam no lo usa esa función, pero lo respetamos en la firma.
     $productosMap = obtenerProductosPorCodigo($conProd, $codes, $conParam, $emp, $pre);
 
     // 4) Armar salida para DataTable
-    // productosMap viene indexado por procod con: subid, proprecio
     $rows = [];
     foreach ($productosMap as $procod => $p) {
-        $und = $p['undcod'] ?? ''; // si decides devolver undcod en la función
-        $codigo_parze = trim($procod . ($und !== '' ? "-$und" : ''));
-
         $rows[] = [
             'pronom'        => $p['pronom'] ?? null,
-            'presentacion'  => $und,
-            'codigo_parze'  => $codigo_parze,
-            'precio'        => $p['proprecio'] ?? null,
+            'proprecio'        => $p['proprecio'] ?? null,
+            'procod'        => $p['procod'] ?? null,
+            'procod_env'    => $p['procod_env'] ?? null,
+            'undequ'        => $p['undequ'] ?? null,
         ];
     }
 

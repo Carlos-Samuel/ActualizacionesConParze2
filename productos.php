@@ -25,9 +25,10 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th style="width:280px;">Producto</th>   
-                                        <th style="width:320px;">Presentacion</th>
+                                        <th style="width:320px;">Codigo</th>
                                         <th style="width:320px;">Codigo Parze</th>
                                         <th style="width:160px;">Precio</th>
+                                        <th style="width:160px;">Unitaria</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>

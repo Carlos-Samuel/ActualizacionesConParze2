@@ -39,7 +39,6 @@
               <span class="menu-title">Descuentos</span>
             </a>
           </li>
-          <!--
           <li class="menu-item">
             <a href="productos.php">
               <span class="menu-icon">
@@ -48,7 +47,6 @@
               <span class="menu-title">Productos</span>
             </a>
           </li>
-          -->
           <li class="menu-item">
             <a href="envioManual.php">
               <span class="menu-icon">

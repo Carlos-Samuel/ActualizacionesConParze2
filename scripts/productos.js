@@ -1,4 +1,3 @@
-// scripts/productos.js
 $(function () {
   const $tabla = $("#tabla-productos");
 
@@ -22,10 +21,10 @@ $(function () {
         language: { url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json' },
         columns: [
           { data: "pronom" },
-          { data: "presentacion" },
-          { data: "codigo_parze" },
+          { data: "procod" },
+          { data: "procod_env" },
           {
-            data: "precio",
+            data: "proprecio",
             className: "text-end",
             render: function (data, type) {
               if (type === "display" || type === "filter") {
@@ -37,6 +36,7 @@ $(function () {
               return data;
             },
           },
+          { data: "undequ" }
         ],
       });
     })

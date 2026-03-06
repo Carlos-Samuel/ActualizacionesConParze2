@@ -136,21 +136,22 @@ function obtenerProductosPorCodigo(
 
     $placeholders = implode(',', array_fill(0, count($codes), '?'));
     $sql = "SELECT 
-                p.ProCod as procod, 
+                REPLACE(p.ProCod, ' ', '') as procod, 
+                REPLACE(CONCAT(p.ProCod, ' - ', u.undnom), ' ', '') AS procod_env,
                 p.ProNom as pronom, 
                 p.SubId as subid, 
-                tpp.proprecio as proprecio
+                CAST(tpp.proprecio AS UNSIGNED) AS proprecio,
+                CAST(pp.undequ AS UNSIGNED) AS undequ
             FROM productos p
-            JOIN tbl_prodprecio tpp ON tpp.proid = p.ProId
-            LEFT JOIN prodpresen pp ON pp.proid = p.ProId
-            WHERE pp.undequ = 1
-                AND p.empId = ? 
+            JOIN tbl_prodprecio tpp ON tpp.proid = p.ProId 
+            JOIN prodpresen pp ON pp.proid = p.ProId AND pp.undid = tpp.undid
+            LEFT JOIN tbl_unidad u ON u.undid = pp.undid
+            WHERE p.empId = ? 
                 AND tpp.tabpreid = ? 
-                AND p.ProCod IN ($placeholders)";
-
-                
-    //LEFT JOIN tbl_unidad u ON u.undid = pp.undid
-    //u.undcod as undcod
+                AND REPLACE(CONCAT(p.ProCod, ' - ', u.undnom), ' ', '') IS NOT NULL
+                AND p.ProCod != ''
+                AND p.ProCod IN ($placeholders)
+            ORDER BY procod";
 
     $st = $con->prepare($sql);
     if (!$st) {
@@ -183,14 +184,14 @@ function obtenerProductosPorCodigo(
     $res = $st->get_result();
     $map = [];
     while ($row = $res->fetch_assoc()) {
-        $code = norm_code((string)$row['procod']);
-        $und = isset($row['undcod']) ? (string)$row['undcod'] : '';
-        $codigoParze = trim($code . ($und !== '' ? "-" . $und : ''));
+        $code = norm_code((string)$row['procod_env']);
         $map[$code] = [
             'pronom'     => isset($row['pronom']) ? (string)$row['pronom'] : null,
             'subid'     => isset($row['subid']) ? (int)$row['subid'] : null,
             'proprecio' => isset($row['proprecio']) ? (float)$row['proprecio'] : null,
-            'undcod'    => isset($row['undcod']) ? (string)$row['undcod'] : '',
+            'procod'    => isset($row['procod']) ? (string)$row['procod'] : '',
+            'procod_env' => isset($row['procod_env']) ? (string)$row['procod_env'] : null,
+            'undequ'    => isset($row['undequ']) ? (string)$row['undequ'] : '',
         ];
     }
     $res->free();
@@ -436,14 +437,18 @@ function generarReporteInventario(int $id_bitacora, string $mode): bool {
 
         // 4) Estado actual
         $current = [];
-        foreach ($cantidadPorProducto as $code => $qty) {
+        foreach ($productosMap as $code => $presentacion) {
 
-            //registrar_paso($conParam, $id_bitacora, 'Procesando producto: ' . $code . ' con qty ' . $qty);
+            $procod = $presentacion['procod'];
+            $subId = $presentacion['subid'] ?? 0;
+            $costo = $presentacion['proprecio'] ?? 0;
+            $procod = $presentacion['procod'] ?? 0;
+            $undequ = $presentacion['undequ'] ?? 0;
 
-            $p      = $productosMap[$code] ?? null;
-            $subId  = $p['subid'] ?? 0;
-            $costo  = $p['proprecio'] ?? 0;
-            //registrar_paso($conParam, $id_bitacora, 'Procesando producto: ' . $code . ' con costo ' . $costo . ' y subId ' . $subId);
+            $qty = 0;
+            if ($undequ == 1){
+                $qty = $cantidadPorProducto[$procod] ?? 0;
+            }
 
             $desc = 0;
             if ($subId !== null && isset($subDescMap[(int)$subId])) {
@@ -451,11 +456,11 @@ function generarReporteInventario(int $id_bitacora, string $mode): bool {
             }
 
             $current[$code] = [
+                'code'      => $code,
                 'qty'       => (int)$qty,
                 'costo'     => $costo === null ? 0 : (int)$costo,
                 'descuento' => (int)$desc,
             ];
-            //registrar_paso($conParam, $id_bitacora, 'Procesando producto: ' . $code . ' con qty ' . $qty . ', costo ' . ($costo===null?'NULL':$costo) . ' y descuento ' . $desc);
 
         }
 
@@ -496,11 +501,6 @@ function generarReporteInventario(int $id_bitacora, string $mode): bool {
             if ($qtyChanged || $costoChanged || $descChanged) {
                 if ($i == 0){
                     $i = 1;
-                    //registrar_paso($conParam, $id_bitacora, 'Lo diferente fue: ' . 
-                    //    "qtyChanged={$qtyChanged} (prev={$prevQty} curr={$currQty}), " .
-                    //    "costoChanged={$costoChanged} (prev=" . ($prevCosto===null?'NULL':$prevCosto) . " curr=" . ($currCosto===null?'NULL':$currCosto) . "), " .
-                    //    "descChanged={$descChanged} (prev={$prevDesc} curr={$currDesc})"
-                    //);
                 }
                 $diffs[$code] = $r;
             }

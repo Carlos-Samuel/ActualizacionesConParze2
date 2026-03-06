@@ -22,19 +22,19 @@
 <link rel="stylesheet" href="css/style_sidebar.css">
 
 <!-- Font Awesome desde CDN -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<link href="css/all.min.css" rel="stylesheet">
 
 <!-- Select2 -->
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="css/select2.min.css" rel="stylesheet" />
 
 <!-- CSS de FixedHeader -->
-<link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.4.0/css/fixedHeader.dataTables.min.css">
+<link rel="stylesheet" href="css/fixedHeader.dataTables.min.css">
 
 <!-- CSS Gridstack -->
-<link href="https://cdn.jsdelivr.net/npm/gridstack@9.2.2/dist/gridstack.min.css" rel="stylesheet" />
+<link href="css/gridstack.min.css" rel="stylesheet" />
 
 <!-- DataTables Core -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="css/jquery.dataTables.min.css">
 
 <!-- DataTables Buttons -->
-<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+<link rel="stylesheet" href="css/buttons.dataTables.min.css">
